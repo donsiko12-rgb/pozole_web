@@ -189,12 +189,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     ───────────────────────────────────── */
     on('profile-back', 'click', () => Router.navigate('menu'));
 
-    on('btn-save-profile', 'click', () => {
+    on('btn-save-profile', async () => {
         const name = document.getElementById('profile-name').value.trim();
         const phone = document.getElementById('profile-phone').value.trim();
-        if (!name || !phone) { UI.toast('Por favor completa todos los campos', 'warning'); return; }
+        const address = document.getElementById('profile-address').value.trim();
+        const colonia = document.getElementById('profile-colonia').value.trim();
 
-        const res = Auth.updateProfile(name, phone);
+        if (!name || !phone || !address || !colonia) {
+            UI.toast('Por favor completa todos los campos', 'warning');
+            return;
+        }
+
+        const btn = document.getElementById('btn-save-profile');
+        const originalHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando...';
+
+        const res = await Auth.updateProfile(name, phone, address, colonia);
+
+        btn.disabled = false;
+        btn.innerHTML = originalHtml;
+
         if (res.ok) {
             UI.toast('Perfil actualizado correctamente ✅', 'success');
             Router.navigate('menu');

@@ -85,9 +85,11 @@ const UI = {
     const user = Auth.getCurrentUser();
     if (!user) return;
     document.getElementById('profile-greeting').textContent = `Hola, ${user.name.split(' ')[0]}`;
-    document.getElementById('profile-name').value = user.name;
-    document.getElementById('profile-phone').value = user.phone;
-    document.getElementById('profile-email').value = user.email;
+    document.getElementById('profile-name').value = user.name || '';
+    document.getElementById('profile-phone').value = user.phone || '';
+    document.getElementById('profile-address').value = user.address || '';
+    document.getElementById('profile-colonia').value = user.colonia || '';
+    document.getElementById('profile-email').value = user.email || '';
   },
 
   /* ── CART ── */

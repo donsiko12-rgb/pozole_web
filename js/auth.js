@@ -71,14 +71,21 @@ const Auth = {
         return DB.getSession(); // We still use session storage for fast sync reads across the app
     },
 
-    async updateProfile(name, phone) {
+    async updateProfile(name, phone, address, colonia) {
         let user = this.getCurrentUser();
         if (!user) return { ok: false };
 
         try {
-            await db.collection('users').doc(user.id).update({ name, phone });
-            user.name = name;
-            user.phone = phone;
+            const data = {
+                name: name.trim(),
+                phone: phone.trim(),
+                address: address.trim(),
+                colonia: colonia.trim()
+            };
+            await db.collection('users').doc(user.id).update(data);
+
+            // Update session
+            user = { ...user, ...data };
             DB.setSession(user);
             return { ok: true, user };
         } catch (error) {

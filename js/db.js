@@ -84,8 +84,11 @@ const DB = {
         return doc.exists ? { id: doc.id, ...doc.data() } : null;
     },
     async getOrdersByUser(uid) {
-        const snapshot = await db.collection('orders').where('userId', '==', uid).orderBy('createdAt', 'desc').get();
-        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        // Removed .orderBy to avoid requiring a composite index in Firestore
+        const snapshot = await db.collection('orders').where('userId', '==', uid).get();
+        const orders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        // Sort locally by date descending
+        return orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     },
     async addOrder(o) {
         const ref = await db.collection('orders').add(o);
