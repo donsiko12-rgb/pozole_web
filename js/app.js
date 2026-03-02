@@ -168,8 +168,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     on('btn-go-profile', 'click', () => Router.navigate('profile'));
+    on('btn-go-orders', 'click', () => Router.navigate('client-orders'));
     on('btn-go-cart', 'click', () => Router.navigate('cart'));
     on('menu-logout', 'click', handleLogout);
+
+    /* ─────────────────────────────────────
+       CLIENT ORDERS EVENTS
+    ───────────────────────────────────── */
+    on('client-orders-back', 'click', () => Router.navigate('menu'));
+
+    document.getElementById('client-orders-list').addEventListener('click', e => {
+        const card = e.target.closest('[data-action="view-client-order"]');
+        if (!card) return;
+        window.startTrackingListener(card.dataset.id);
+        Router.navigate('tracking');
+    });
 
     /* ─────────────────────────────────────
        PROFILE EVENTS

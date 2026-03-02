@@ -208,6 +208,9 @@
         <div class="nav-title" style="font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--primary)">
           🍲 Don Chuy
         </div>
+        <button class="nav-action" id="btn-go-orders" title="Mis Pedidos">
+          <i class="fa-solid fa-list-ul"></i>
+        </button>
         <button class="nav-action" id="btn-go-profile" title="Mi Perfil">
           <i class="fa-solid fa-user"></i>
         </button>
@@ -432,6 +435,20 @@
       </div>
     </section>
 
+
+    <!-- ════════════════════════════════════════
+       SCREEN: CLIENT ORDERS HISTORY
+  ════════════════════════════════════════ -->
+    <section id="screen-client-orders" class="screen">
+      <nav class="app-nav">
+        <button class="nav-action" id="client-orders-back"><i class="fa-solid fa-arrow-left"></i></button>
+        <div class="nav-title">Mis Pedidos</div>
+        <div style="width:40px"></div>
+      </nav>
+      <div class="scroll-content" style="padding:16px">
+        <div id="client-orders-list"></div>
+      </div>
+    </section>
 
     <!-- ════════════════════════════════════════
        SCREEN: ADMIN PANEL

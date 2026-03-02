@@ -7,7 +7,7 @@ const Router = {
     _current: null,
 
     _publicScreens: ['login', 'register', 'recover'],
-    _clientScreens: ['menu', 'cart', 'delivery', 'tracking', 'profile'],
+    _clientScreens: ['menu', 'cart', 'delivery', 'tracking', 'profile', 'client-orders'],
     _adminScreens: ['admin'],
 
     async navigate(screenId, force = false) {
@@ -39,6 +39,7 @@ const Router = {
         if (screenId === 'delivery') { setTimeout(() => MapManager.initDeliveryMap(), 200); }
         if (screenId === 'tracking') await UI.renderTracking();
         if (screenId === 'profile') UI.renderProfile();
+        if (screenId === 'client-orders') await UI.renderClientOrders();
         if (screenId === 'admin') await UI.renderAdminOrders();
 
         window.location.hash = screenId;

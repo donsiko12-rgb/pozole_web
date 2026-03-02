@@ -130,13 +130,11 @@ const UI = {
   },
 
   /* ── TRACKING ── */
-  renderTracking() {
+  async renderTracking() {
     const order = window._currentUserOrder;
     if (!order) return;
 
-    // Re-fetch order to get latest status
-    const fresh = DB.getOrderById(order.id) || order;
-    window._currentUserOrder = fresh;
+    const fresh = order;
 
     document.getElementById('tracking-order-num').textContent = fresh.id;
     document.getElementById('tracking-eta').textContent =
@@ -173,6 +171,41 @@ const UI = {
     document.getElementById('tracking-address').textContent = fresh.address;
   },
 
+  /* ── CLIENT ORDERS HISTORY ── */
+  async renderClientOrders() {
+    const list = document.getElementById('client-orders-list');
+    list.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-light)"><i class="fa-solid fa-spinner fa-spin fa-2x"></i><p>Cargando pedidos...</p></div>';
+
+    const user = Auth.getCurrentUser();
+    if (!user) return;
+
+    const orders = await Orders.getByUser(user.id);
+    if (!orders.length) {
+      list.innerHTML = `<div class="empty-state">
+        <div style="font-size:3rem;text-align:center;opacity:.3;padding:40px 0">📋</div>
+        <p style="text-align:center;color:var(--text-muted)">Aún no tienes pedidos</p></div>`;
+      return;
+    }
+    list.innerHTML = orders.map(o => {
+      const info = Orders.getStatusInfo(o.status);
+      const time = new Date(o.createdAt).toLocaleDateString('es-MX', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+      return `
+      <div class="order-card status-${o.status}" data-action="view-client-order" data-id="${o.id}">
+        <div class="order-card-header">
+          <span class="order-id">${o.id}</span>
+          <span class="order-time">${time}</span>
+        </div>
+        <div class="order-detail-item-row" style="margin-top:5px; margin-bottom: 10px; font-size: 0.9em; opacity: 0.8">
+            ${o.items.map(i => `${i.qty}x ${i.name}`).join(', ')}
+        </div>
+        <div class="order-card-footer">
+          <span class="order-total">$${o.total}</span>
+          <span class="status-badge ${o.status}">${info.label}</span>
+        </div>
+      </div>`;
+    }).join('');
+  },
+
   /* ── ADMIN ORDERS ── */
   async renderAdminOrders() {
     const list = document.getElementById('admin-orders-list');
@@ -204,8 +237,8 @@ const UI = {
   },
 
   /* ── ADMIN ORDER DETAIL MODAL ── */
-  openOrderDetail(orderId) {
-    const order = Orders.getById(orderId);
+  async openOrderDetail(orderId) {
+    const order = await Orders.getById(orderId);
     if (!order) return;
     window._currentAdminOrder = order;
 
