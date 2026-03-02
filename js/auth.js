@@ -33,7 +33,7 @@ const Auth = {
                 email: email.toLowerCase().trim(),
                 address: address.trim(),
                 colonia: colonia.trim(),
-                role: 'client',
+                role: email.toLowerCase().trim() === 'admin@pozole.mx' ? 'admin' : 'client',
                 createdAt: new Date().toISOString()
             };
 

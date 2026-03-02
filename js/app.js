@@ -4,7 +4,11 @@
 'use strict';
 
 document.addEventListener('DOMContentLoaded', async () => {
-    await DB.init();
+    try {
+        await DB.init();
+    } catch (e) {
+        console.error("DB init failed:", e);
+    }
 
     // Listen to Firebase Auth state changes
     auth.onAuthStateChanged(async (firebaseUser) => {
@@ -27,6 +31,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             } catch (err) {
                 console.error("Error fetching user session", err);
+                DB.clearSession();
+                UI.toast('Error conectando a la base de datos (Verifica los permisos).', 'error');
+                if (Router.getCurrent() !== 'login') Router.navigate('login');
             }
         } else {
             // User is signed out
