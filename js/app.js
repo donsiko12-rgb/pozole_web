@@ -3,16 +3,39 @@
    ========================================================= */
 'use strict';
 
-document.addEventListener('DOMContentLoaded', () => {
-    DB.init();
+document.addEventListener('DOMContentLoaded', async () => {
+    await DB.init();
 
-    // Restore session
-    const user = Auth.getCurrentUser();
-    if (user) {
-        Router.navigate(user.role === 'admin' ? 'admin' : 'menu');
-    } else {
-        Router.navigate('login');
-    }
+    // Listen to Firebase Auth state changes
+    auth.onAuthStateChanged(async (firebaseUser) => {
+        if (firebaseUser) {
+            // User is logged into Firebase, refetch latest data from Firestore
+            try {
+                const doc = await db.collection('users').doc(firebaseUser.uid).get();
+                if (doc.exists) {
+                    const userData = { id: firebaseUser.uid, ...doc.data() };
+                    DB.setSession(userData); // Keep local sync copy
+
+                    // If they are on a public screen or haven't loaded one, redirect them in
+                    const currentScreen = Router.getCurrent();
+                    if (!currentScreen || ['login', 'register', 'recover'].includes(currentScreen)) {
+                        Router.navigate(userData.role === 'admin' ? 'admin' : 'menu');
+                    }
+                } else {
+                    DB.clearSession();
+                    if (Router.getCurrent() !== 'login') Router.navigate('login');
+                }
+            } catch (err) {
+                console.error("Error fetching user session", err);
+            }
+        } else {
+            // User is signed out
+            DB.clearSession();
+            if (Router.getCurrent() !== 'login' && Router.getCurrent() !== 'register' && Router.getCurrent() !== 'recover') {
+                Router.navigate('login');
+            }
+        }
+    });
 
     /* ─────────────────────────────────────
        CART EVENTS
@@ -27,16 +50,27 @@ document.addEventListener('DOMContentLoaded', () => {
        AUTH EVENTS
     ───────────────────────────────────── */
     // Login
-    document.getElementById('btn-login').addEventListener('click', () => {
+    document.getElementById('btn-login').addEventListener('click', async () => {
         const email = document.getElementById('login-email').value.trim();
         const pass = document.getElementById('login-pass').value;
+        const btn = document.getElementById('btn-login');
+
         clearErrors('login-form');
         let ok = true;
         if (!email) { showError('login-email-err', 'Ingresa tu correo'); ok = false; }
         if (!pass) { showError('login-pass-err', 'Ingresa tu contraseña'); ok = false; }
         if (!ok) return;
-        const res = Auth.login(email, pass);
+
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Cargando...';
+
+        const res = await Auth.login(email, pass);
+
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Entrar';
+
         if (!res.ok) { UI.toast(res.msg, 'error'); return; }
+
         document.getElementById('login-email').value = '';
         document.getElementById('login-pass').value = '';
         Router.navigate(res.user.role === 'admin' ? 'admin' : 'menu');
@@ -44,22 +78,37 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Register
-    document.getElementById('btn-register').addEventListener('click', () => {
+    document.getElementById('btn-register').addEventListener('click', async () => {
         const name = document.getElementById('reg-name').value.trim();
         const phone = document.getElementById('reg-phone').value.trim();
         const email = document.getElementById('reg-email').value.trim();
         const pass = document.getElementById('reg-pass').value;
         const pass2 = document.getElementById('reg-pass2').value;
+        const address = document.getElementById('reg-address').value.trim();
+        const colonia = document.getElementById('reg-colonia').value.trim();
+        const btn = document.getElementById('btn-register');
+
         clearErrors('register-form');
         let ok = true;
         if (!name) { showError('reg-name-err', 'Ingresa tu nombre'); ok = false; }
         if (!phone) { showError('reg-phone-err', 'Ingresa tu teléfono'); ok = false; }
         if (!email || !email.includes('@')) { showError('reg-email-err', 'Correo inválido'); ok = false; }
+        if (!address) { showError('reg-address-err', 'Ingresa tu dirección'); ok = false; }
+        if (!colonia) { showError('reg-colonia-err', 'Ingresa tu colonia'); ok = false; }
         if (pass.length < 6) { showError('reg-pass-err', 'Mínimo 6 caracteres'); ok = false; }
         if (pass !== pass2) { showError('reg-pass2-err', 'Las contraseñas no coinciden'); ok = false; }
         if (!ok) return;
-        const res = Auth.register(name, phone, email, pass);
+
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creando...';
+
+        const res = await Auth.register(name, phone, email, pass, address, colonia);
+
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Crear cuenta';
+
         if (!res.ok) { UI.toast(res.msg, 'error'); return; }
+
         Router.navigate('menu');
         UI.toast('¡Cuenta creada exitosamente! 🎉', 'success');
     });
@@ -149,16 +198,27 @@ document.addEventListener('DOMContentLoaded', () => {
     ───────────────────────────────────── */
     on('delivery-back', 'click', () => Router.navigate('cart'));
 
-    on('btn-place-order', 'click', () => {
+    on('btn-place-order', 'click', async () => {
         const address = document.getElementById('delivery-address').value.trim();
         const ref = document.getElementById('delivery-ref').value.trim();
         if (!address) { UI.toast('Por favor ingresa tu dirección', 'warning'); return; }
+
+        const btn = document.getElementById('btn-place-order');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Procesando...';
+
         const coords = MapManager.getDeliveryCoords();
-        const order = Orders.create(Cart.getItems(), address, coords, ref);
+        const order = await Orders.create(Cart.getItems(), address, coords, ref);
+
+        btn.disabled = false;
+        btn.innerHTML = 'Enviar pedido <i class="fa-solid fa-arrow-right"></i>';
+
         window._currentUserOrder = order;
         Cart.clear();
         document.getElementById('delivery-address').value = '';
         document.getElementById('delivery-ref').value = '';
+
+        window.startTrackingListener(order.id);
         Router.navigate('tracking');
         UI.toast('¡Pedido enviado! 🎉', 'success');
     });
@@ -169,15 +229,29 @@ document.addEventListener('DOMContentLoaded', () => {
     on('tracking-back', 'click', () => Router.navigate('menu'));
     on('tracking-logout', 'click', handleLogout);
 
-    // Auto-refresh tracking every 10s
-    setInterval(() => {
-        if (Router.getCurrent() === 'tracking') UI.renderTracking();
-    }, 10000);
+    // Real-time tracking using Firestore onSnapshot
+    let trackingUnsubscribe = null;
+
+    // Call this when entering tracking screen
+    window.startTrackingListener = (orderId) => {
+        if (trackingUnsubscribe) trackingUnsubscribe();
+
+        trackingUnsubscribe = db.collection('orders').doc(orderId).onSnapshot(doc => {
+            if (doc.exists && Router.getCurrent() === 'tracking') {
+                const fresh = { id: doc.id, ...doc.data() };
+                window._currentUserOrder = fresh;
+                UI.renderTracking();
+            }
+        });
+    };
 
     /* ─────────────────────────────────────
        ADMIN EVENTS
     ───────────────────────────────────── */
     on('admin-logout', 'click', handleLogout);
+
+    // Admin real-time orders listener
+    let adminOrdersUnsubscribe = null;
 
     // Admin tab switching
     document.querySelectorAll('.admin-tab').forEach(tab => {
@@ -187,7 +261,22 @@ document.addEventListener('DOMContentLoaded', () => {
             const target = tab.dataset.tab;
             document.querySelectorAll('.admin-panel-screen').forEach(p => p.classList.remove('active-sub'));
             document.getElementById('admin-panel-' + target).classList.add('active-sub');
-            if (target === 'orders') UI.renderAdminOrders();
+
+            if (target === 'orders') {
+                if (!adminOrdersUnsubscribe) {
+                    adminOrdersUnsubscribe = db.collection('orders').orderBy('createdAt', 'desc').onSnapshot(() => {
+                        if (Router.getCurrent() === 'admin' && target === 'orders') {
+                            UI.renderAdminOrders();
+                        }
+                    });
+                }
+                UI.renderAdminOrders();
+            } else {
+                if (adminOrdersUnsubscribe) {
+                    adminOrdersUnsubscribe();
+                    adminOrdersUnsubscribe = null;
+                }
+            }
             if (target === 'products') UI.renderAdminProducts();
             if (target === 'summary') UI.renderAdminSummary();
         });

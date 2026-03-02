@@ -13,7 +13,7 @@ const STATUS_LABELS = {
 const STATUSES = ['received', 'preparing', 'onway', 'delivered'];
 
 const Orders = {
-    create(cartItems, address, coords, reference) {
+    async create(cartItems, address, coords, reference) {
         const user = Auth.getCurrentUser();
         const order = {
             id: 'ORD-' + Date.now().toString().slice(-6),
@@ -30,17 +30,17 @@ const Orders = {
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
         };
-        return DB.addOrder(order);
+        return await DB.addOrder(order);
     },
 
-    updateStatus(orderId, newStatus) {
+    async updateStatus(orderId, newStatus) {
         if (!STATUSES.includes(newStatus)) return null;
-        return DB.updateOrder(orderId, { status: newStatus, updatedAt: new Date().toISOString() });
+        return await DB.updateOrder(orderId, { status: newStatus, updatedAt: new Date().toISOString() });
     },
 
-    getAll() { return DB.getOrders(); },
-    getById(id) { return DB.getOrderById(id); },
-    getByUser(uid) { return DB.getOrdersByUser(uid); },
+    async getAll() { return await DB.getOrders(); },
+    async getById(id) { return await DB.getOrderById(id); },
+    async getByUser(uid) { return await DB.getOrdersByUser(uid); },
 
     getStatusInfo(status) { return STATUS_LABELS[status] || STATUS_LABELS.received; },
     getAllStatuses() { return STATUSES; },
@@ -48,18 +48,21 @@ const Orders = {
     getStatusIndex(status) { return STATUSES.indexOf(status); },
 
     // Daily summary helpers
-    getTodayOrders() {
+    async getTodayOrders() {
         const today = new Date().toDateString();
-        return this.getAll().filter(o => new Date(o.createdAt).toDateString() === today);
+        const all = await this.getAll();
+        return all.filter(o => new Date(o.createdAt).toDateString() === today);
     },
 
-    getTodayTotal() {
-        return this.getTodayOrders().reduce((s, o) => s + o.total, 0);
+    async getTodayTotal() {
+        const todayOrders = await this.getTodayOrders();
+        return todayOrders.reduce((s, o) => s + o.total, 0);
     },
 
-    getTopProducts() {
+    async getTopProducts() {
         const counts = {};
-        this.getTodayOrders().forEach(o => {
+        const todayOrders = await this.getTodayOrders();
+        todayOrders.forEach(o => {
             o.items.forEach(item => {
                 counts[item.name] = (counts[item.name] || 0) + item.qty;
             });

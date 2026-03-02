@@ -10,7 +10,7 @@ const Router = {
     _clientScreens: ['menu', 'cart', 'delivery', 'tracking', 'profile'],
     _adminScreens: ['admin'],
 
-    navigate(screenId, force = false) {
+    async navigate(screenId, force = false) {
         const user = Auth.getCurrentUser();
 
         // Auth guard
@@ -34,12 +34,12 @@ const Router = {
         window.scrollTo(0, 0);
 
         // Lifecycle hooks
-        if (screenId === 'menu') UI.renderMenu();
+        if (screenId === 'menu') await UI.renderMenu();
         if (screenId === 'cart') UI.renderCart();
         if (screenId === 'delivery') { setTimeout(() => MapManager.initDeliveryMap(), 200); }
-        if (screenId === 'tracking') UI.renderTracking();
+        if (screenId === 'tracking') await UI.renderTracking();
         if (screenId === 'profile') UI.renderProfile();
-        if (screenId === 'admin') UI.renderAdminOrders();
+        if (screenId === 'admin') await UI.renderAdminOrders();
 
         window.location.hash = screenId;
     },

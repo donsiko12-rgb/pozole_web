@@ -11,17 +11,10 @@ const DB = {
         SESSION: 'pozole_session',
     },
 
-    init() {
-        if (!localStorage.getItem(this.KEYS.USERS)) {
-            const admin = {
-                id: 'u_admin', name: 'Administrador', email: 'admin@pozole.mx',
-                phone: '5500000000', password: btoa('admin123'), role: 'admin',
-                createdAt: new Date().toISOString()
-            };
-            localStorage.setItem(this.KEYS.USERS, JSON.stringify([admin]));
-        }
-
-        if (!localStorage.getItem(this.KEYS.PRODUCTS)) {
+    async init() {
+        // Seed products if collection is empty
+        const snapshot = await db.collection('products').limit(1).get();
+        if (snapshot.empty) {
             const products = [
                 { id: 'p01', name: 'Pozole Chico', description: 'Ideal para una persona', price: 65, category: 'pozole', emoji: '🍲', active: true },
                 { id: 'p02', name: 'Pozole Mediano', description: 'Para compartir con alguien', price: 110, category: 'pozole', emoji: '🍲', active: true },
@@ -34,51 +27,75 @@ const DB = {
                 { id: 'p09', name: 'Agua de Jamaica', description: 'Vaso 500 ml', price: 25, category: 'bebidas', emoji: '🧃', active: true },
                 { id: 'p10', name: 'Refresco', description: 'Lata 355 ml', price: 20, category: 'bebidas', emoji: '🥤', active: true },
             ];
-            localStorage.setItem(this.KEYS.PRODUCTS, JSON.stringify(products));
-        }
 
-        if (!localStorage.getItem(this.KEYS.ORDERS)) {
-            localStorage.setItem(this.KEYS.ORDERS, JSON.stringify([]));
+            const batch = db.batch();
+            products.forEach(p => {
+                const ref = db.collection('products').doc();
+                p.id = ref.id; // Assign Firestore ID
+                batch.set(ref, p);
+            });
+            await batch.commit();
         }
     },
 
-    /* ── USERS ── */
-    getUsers() { return JSON.parse(localStorage.getItem(this.KEYS.USERS) || '[]'); },
-    saveUsers(u) { localStorage.setItem(this.KEYS.USERS, JSON.stringify(u)); },
-    getUserByEmail(e) { return this.getUsers().find(u => u.email === e.toLowerCase()); },
-    getUserById(id) { return this.getUsers().find(u => u.id === id); },
-    addUser(u) { const arr = this.getUsers(); arr.push(u); this.saveUsers(arr); },
-    updateUser(id, d) {
-        const arr = this.getUsers(), i = arr.findIndex(u => u.id === id);
-        if (i !== -1) { arr[i] = { ...arr[i], ...d }; this.saveUsers(arr); return arr[i]; }
-        return null;
+    /* ── USERS (Firebase Admin handles auth, Firestore handles profile) ── */
+    async getUserById(id) {
+        const doc = await db.collection('users').doc(id).get();
+        return doc.exists ? { id: doc.id, ...doc.data() } : null;
+    },
+    async updateUser(id, d) {
+        await db.collection('users').doc(id).update(d);
+        return { id, ...d };
     },
 
     /* ── PRODUCTS ── */
-    getProducts() { return JSON.parse(localStorage.getItem(this.KEYS.PRODUCTS) || '[]'); },
-    saveProducts(p) { localStorage.setItem(this.KEYS.PRODUCTS, JSON.stringify(p)); },
-    getActiveProducts() { return this.getProducts().filter(p => p.active); },
-    getProductById(id) { return this.getProducts().find(p => p.id === id); },
-    addProduct(p) { const arr = this.getProducts(); arr.push(p); this.saveProducts(arr); },
-    updateProduct(id, d) {
-        const arr = this.getProducts(), i = arr.findIndex(p => p.id === id);
-        if (i !== -1) { arr[i] = { ...arr[i], ...d }; this.saveProducts(arr); return arr[i]; }
-        return null;
+    async getProducts() {
+        const snapshot = await db.collection('products').get();
+        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    },
+    async getActiveProducts() {
+        const snapshot = await db.collection('products').where('active', '==', true).get();
+        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    },
+    async getProductById(id) {
+        const doc = await db.collection('products').doc(id).get();
+        return doc.exists ? { id: doc.id, ...doc.data() } : null;
+    },
+    async addProduct(p) {
+        const ref = await db.collection('products').add(p);
+        return { id: ref.id, ...p };
+    },
+    async updateProduct(id, d) {
+        await db.collection('products').doc(id).update(d);
+        return { id, ...d };
     },
 
     /* ── ORDERS ── */
-    getOrders() { return JSON.parse(localStorage.getItem(this.KEYS.ORDERS) || '[]'); },
-    saveOrders(o) { localStorage.setItem(this.KEYS.ORDERS, JSON.stringify(o)); },
-    getOrderById(id) { return this.getOrders().find(o => o.id === id); },
-    getOrdersByUser(uid) { return this.getOrders().filter(o => o.userId === uid); },
-    addOrder(o) { const arr = this.getOrders(); arr.unshift(o); this.saveOrders(arr); return o; },
-    updateOrder(id, d) {
-        const arr = this.getOrders(), i = arr.findIndex(o => o.id === id);
-        if (i !== -1) { arr[i] = { ...arr[i], ...d }; this.saveOrders(arr); return arr[i]; }
-        return null;
+    async getOrders() {
+        const snapshot = await db.collection('orders').orderBy('createdAt', 'desc').get();
+        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    },
+    async getOrderById(id) {
+        const doc = await db.collection('orders').doc(id).get();
+        return doc.exists ? { id: doc.id, ...doc.data() } : null;
+    },
+    async getOrdersByUser(uid) {
+        const snapshot = await db.collection('orders').where('userId', '==', uid).orderBy('createdAt', 'desc').get();
+        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    },
+    async addOrder(o) {
+        const ref = await db.collection('orders').add(o);
+        o.id = ref.id;
+        // Optionally update the doc with its own ID (Firestore creates the ID first)
+        await ref.update({ id: ref.id });
+        return o;
+    },
+    async updateOrder(id, d) {
+        await db.collection('orders').doc(id).update(d);
+        return { id, ...d };
     },
 
-    /* ── SESSION ── */
+    /* ── SESSION (Local sync fallback for fast UI rendering) ── */
     getSession() { return JSON.parse(sessionStorage.getItem(this.KEYS.SESSION) || 'null'); },
     setSession(u) { sessionStorage.setItem(this.KEYS.SESSION, JSON.stringify(u)); },
     clearSession() { sessionStorage.removeItem(this.KEYS.SESSION); },

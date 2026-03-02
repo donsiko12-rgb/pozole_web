@@ -39,37 +39,43 @@ const UI = {
   },
 
   /* ── MENU ── */
-  renderMenu(filterCategory = 'all') {
+  async renderMenu(filterCategory = 'all') {
     const user = Auth.getCurrentUser();
     if (user) document.getElementById('menu-user-name').textContent = `¡Hola, ${user.name.split(' ')[0]}! 👋`;
 
-    const products = Products.getActive();
-    const filtered = filterCategory === 'all' ? products : products.filter(p => p.category === filterCategory);
     const grid = document.getElementById('products-grid');
+    grid.innerHTML = '<div style="text-align:center;padding:40px;width:100%;color:var(--text-light)"><i class="fa-solid fa-spinner fa-spin fa-2x"></i><p>Cargando menú...</p></div>';
 
-    grid.innerHTML = filtered.map(p => {
-      const cartItem = Cart.getItems().find(i => i.productId === p.id);
-      const count = cartItem ? cartItem.qty : 0;
-      return `
-      <div class="product-card" data-product-id="${p.id}">
-        <span class="product-emoji">${p.emoji}</span>
-        <div class="product-body">
-          <div class="product-name">${p.name}</div>
-          <div class="product-desc">${p.description}</div>
-          <div class="product-footer">
-            <span class="product-price">$${p.price}</span>
-            ${count > 0
-          ? `<div class="qty-control-inline">
-                   <button class="qty-btn minus" data-action="decrease" data-id="${p.id}">−</button>
-                   <span class="qty-value">${count}</span>
-                   <button class="qty-btn plus" data-action="increase" data-id="${p.id}">+</button>
-                 </div>`
-          : `<button class="btn-add" data-action="add" data-id="${p.id}"><i class="fa-solid fa-plus"></i></button>`
-        }
-          </div>
-        </div>
-      </div>`;
-    }).join('');
+    const products = await DB.getActiveProducts(); // Async call to Firestore
+    const filtered = filterCategory === 'all' ? products : products.filter(p => p.category === filterCategory);
+
+    if (!filtered.length) {
+      grid.innerHTML = '<div style="text-align:center;padding:40px;width:100%;color:var(--text-light)">No hay productos en esta categoría.</div>';
+    } else {
+      grid.innerHTML = filtered.map(p => {
+        const cartItem = Cart.getItems().find(i => i.productId === p.id);
+        const count = cartItem ? cartItem.qty : 0;
+        return `
+          <div class="product-card" data-product-id="${p.id}">
+            <span class="product-emoji">${p.emoji}</span>
+            <div class="product-body">
+              <div class="product-name">${p.name}</div>
+              <div class="product-desc">${p.description}</div>
+              <div class="product-footer">
+                <span class="product-price">$${p.price}</span>
+                ${count > 0
+            ? `<div class="qty-control-inline">
+                       <button class="qty-btn minus" data-action="decrease" data-id="${p.id}">−</button>
+                       <span class="qty-value">${count}</span>
+                       <button class="qty-btn plus" data-action="increase" data-id="${p.id}">+</button>
+                     </div>`
+            : `<button class="btn-add" data-action="add" data-id="${p.id}"><i class="fa-solid fa-plus"></i></button>`
+          }
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+    }
 
     this.updateCartBadge();
   },
@@ -168,9 +174,11 @@ const UI = {
   },
 
   /* ── ADMIN ORDERS ── */
-  renderAdminOrders() {
-    const orders = Orders.getAll();
+  async renderAdminOrders() {
     const list = document.getElementById('admin-orders-list');
+    list.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-light)"><i class="fa-solid fa-spinner fa-spin fa-2x"></i><p>Cargando pedidos...</p></div>';
+
+    const orders = await Orders.getAll();
     if (!orders.length) {
       list.innerHTML = `<div class="empty-state">
         <div style="font-size:3rem;text-align:center;opacity:.3;padding:40px 0">📋</div>
@@ -250,9 +258,11 @@ const UI = {
   },
 
   /* ── ADMIN PRODUCTS ── */
-  renderAdminProducts() {
-    const products = Products.getAll();
+  async renderAdminProducts() {
     const list = document.getElementById('admin-products-list');
+    list.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-light)"><i class="fa-solid fa-spinner fa-spin fa-2x"></i><p>Cargando productos...</p></div>';
+
+    const products = await Products.getAll();
     list.innerHTML = products.map(p => `
       <div class="prod-manage-card ${p.active ? '' : 'prod-inactive'}" data-product-id="${p.id}">
         <span class="prod-manage-emoji">${p.emoji}</span>
@@ -274,10 +284,10 @@ const UI = {
   },
 
   /* ── ADMIN SUMMARY ── */
-  renderAdminSummary() {
-    const todayOrders = Orders.getTodayOrders();
-    const total = Orders.getTodayTotal();
-    const topProducts = Orders.getTopProducts();
+  async renderAdminSummary() {
+    const todayOrders = await Orders.getTodayOrders();
+    const total = await Orders.getTodayTotal();
+    const topProducts = await Orders.getTopProducts();
     const delivered = todayOrders.filter(o => o.status === 'delivered').length;
 
     document.getElementById('summary-total').textContent = `$${total}`;

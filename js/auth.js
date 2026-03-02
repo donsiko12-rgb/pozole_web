@@ -4,58 +4,91 @@
 'use strict';
 
 const Auth = {
-    login(email, password) {
-        const user = DB.getUserByEmail(email);
-        if (!user) return { ok: false, msg: 'Correo no registrado.' };
-        if (user.password !== btoa(password)) return { ok: false, msg: 'Contraseña incorrecta.' };
-        DB.setSession(user);
-        return { ok: true, user };
+    async login(email, password) {
+        try {
+            const userCredential = await auth.signInWithEmailAndPassword(email, password);
+            const doc = await db.collection('users').doc(userCredential.user.uid).get();
+            if (!doc.exists) return { ok: false, msg: 'Error: Datos de usuario no encontrados en base de datos.' };
+
+            const userData = { id: userCredential.user.uid, ...doc.data() };
+            DB.setSession(userData);
+            return { ok: true, user: userData };
+        } catch (error) {
+            console.error(error);
+            if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+                return { ok: false, msg: 'Correo o contraseña incorrectos.' };
+            }
+            return { ok: false, msg: 'Error al iniciar sesión: ' + error.message };
+        }
     },
 
-    register(name, phone, email, password) {
-        if (DB.getUserByEmail(email)) return { ok: false, msg: 'Este correo ya está registrado.' };
-        const user = {
-            id: 'u_' + Date.now(),
-            name: name.trim(),
-            phone: phone.trim(),
-            email: email.toLowerCase().trim(),
-            password: btoa(password),
-            role: 'client',
-            createdAt: new Date().toISOString(),
-        };
-        DB.addUser(user);
-        DB.setSession(user);
-        return { ok: true, user };
+    async register(name, phone, email, password, address, colonia) {
+        try {
+            const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+            const uid = userCredential.user.uid;
+
+            const userData = {
+                name: name.trim(),
+                phone: phone.trim(),
+                email: email.toLowerCase().trim(),
+                address: address.trim(),
+                colonia: colonia.trim(),
+                role: 'client',
+                createdAt: new Date().toISOString()
+            };
+
+            await db.collection('users').doc(uid).set(userData);
+            userData.id = uid;
+            DB.setSession(userData);
+            return { ok: true, user: userData };
+        } catch (error) {
+            console.error(error);
+            if (error.code === 'auth/email-already-in-use') {
+                return { ok: false, msg: 'Este correo ya está registrado.' };
+            }
+            return { ok: false, msg: 'Error al registrar: ' + error.message };
+        }
     },
 
-    logout() {
+    async logout() {
+        await auth.signOut();
         DB.clearSession();
     },
 
-    recoverPassword(email) {
-        const user = DB.getUserByEmail(email);
-        if (!user) return { ok: false, msg: 'No existe una cuenta con ese correo.' };
-        // Simulated: in a real app, send an email
-        return { ok: true, msg: `Se envió un enlace de recuperación a ${email}` };
+    async recoverPassword(email) {
+        try {
+            await auth.sendPasswordResetEmail(email);
+            return { ok: true, msg: `Se envió un enlace de recuperación a ${email}` };
+        } catch (error) {
+            if (error.code === 'auth/user-not-found') {
+                return { ok: false, msg: 'No existe una cuenta con ese correo.' };
+            }
+            return { ok: false, msg: 'Error al enviar recuperación.' };
+        }
     },
 
     getCurrentUser() {
-        return DB.getSession();
+        return DB.getSession(); // We still use session storage for fast sync reads across the app
     },
 
-    updateProfile(name, phone) {
+    async updateProfile(name, phone) {
         let user = this.getCurrentUser();
         if (!user) return { ok: false };
-        const updated = DB.updateUser(user.id, { name, phone });
-        if (updated) {
-            DB.setSession(updated);
-            return { ok: true, user: updated };
+
+        try {
+            await db.collection('users').doc(user.id).update({ name, phone });
+            user.name = name;
+            user.phone = phone;
+            DB.setSession(user);
+            return { ok: true, user };
+        } catch (error) {
+            console.error(error);
+            return { ok: false };
         }
-        return { ok: false };
     },
 
     isAdmin() {
         const u = DB.getSession();
         return u && u.role === 'admin';
-    },
+    }
 };
