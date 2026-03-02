@@ -48,6 +48,11 @@ const DB = {
     getUserByEmail(e) { return this.getUsers().find(u => u.email === e.toLowerCase()); },
     getUserById(id) { return this.getUsers().find(u => u.id === id); },
     addUser(u) { const arr = this.getUsers(); arr.push(u); this.saveUsers(arr); },
+    updateUser(id, d) {
+        const arr = this.getUsers(), i = arr.findIndex(u => u.id === id);
+        if (i !== -1) { arr[i] = { ...arr[i], ...d }; this.saveUsers(arr); return arr[i]; }
+        return null;
+    },
 
     /* ── PRODUCTS ── */
     getProducts() { return JSON.parse(localStorage.getItem(this.KEYS.PRODUCTS) || '[]'); },

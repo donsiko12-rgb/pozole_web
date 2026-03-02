@@ -74,6 +74,16 @@ const UI = {
     this.updateCartBadge();
   },
 
+  /* ── PROFILE ── */
+  renderProfile() {
+    const user = Auth.getCurrentUser();
+    if (!user) return;
+    document.getElementById('profile-greeting').textContent = `Hola, ${user.name.split(' ')[0]}`;
+    document.getElementById('profile-name').value = user.name;
+    document.getElementById('profile-phone').value = user.phone;
+    document.getElementById('profile-email').value = user.email;
+  },
+
   /* ── CART ── */
   renderCart() {
     const items = Cart.getItems();

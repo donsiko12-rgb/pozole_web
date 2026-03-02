@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -10,7 +11,9 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap"
+    rel="stylesheet">
 
   <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -21,460 +24,527 @@
   <!-- App CSS -->
   <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
-<div id="app">
+  <div id="app">
 
-  <!-- ════════════════════════════════════════
+    <!-- ════════════════════════════════════════
        SCREEN: LOGIN
   ════════════════════════════════════════ -->
-  <section id="screen-login" class="screen auth-screen">
-    <div class="auth-hero">
-      <div class="auth-logo">Pozole <span>Don Chuy</span></div>
-      <div class="auth-tagline">🌮 El sabor de siempre, en tu puerta</div>
-    </div>
-    <div class="auth-card">
-      <div class="auth-card-inner" id="login-form">
-        <h2 class="auth-title">Iniciar sesión</h2>
-        <p class="auth-subtitle">Accede a tu cuenta para pedir</p>
-
-        <div class="form-group">
-          <label class="form-label">Correo electrónico</label>
-          <div class="input-wrap">
-            <i class="fa-solid fa-envelope input-icon"></i>
-            <input id="login-email" class="form-input" type="email" placeholder="tucorreo@ejemplo.com" autocomplete="email">
-          </div>
-          <span class="form-error" id="login-email-err"></span>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Contraseña</label>
-          <div class="input-wrap">
-            <i class="fa-solid fa-lock input-icon"></i>
-            <input id="login-pass" class="form-input" type="password" placeholder="••••••••" autocomplete="current-password">
-          </div>
-          <span class="form-error" id="login-pass-err"></span>
-        </div>
-
-        <button class="forgot-link" id="go-recover">¿Olvidaste tu contraseña?</button>
-
-        <button class="btn btn-primary" id="btn-login">
-          <i class="fa-solid fa-right-to-bracket"></i> Entrar
-        </button>
-
-        <div class="auth-link-row">
-          ¿No tienes cuenta? <button class="auth-link" id="go-register">Crear cuenta</button>
-        </div>
-
-        <div class="auth-link-row" style="margin-top:12px;font-size:.78rem;color:var(--text-muted)">
-          Admin demo: admin@pozole.mx / admin123
-        </div>
+    <section id="screen-login" class="screen auth-screen">
+      <div class="auth-hero">
+        <div class="auth-logo">Pozole <span>Don Chuy</span></div>
+        <div class="auth-tagline">🌮 El sabor de siempre, en tu puerta</div>
       </div>
-    </div>
-  </section>
+      <div class="auth-card">
+        <div class="auth-card-inner" id="login-form">
+          <h2 class="auth-title">Iniciar sesión</h2>
+          <p class="auth-subtitle">Accede a tu cuenta para pedir</p>
 
-
-  <!-- ════════════════════════════════════════
-       SCREEN: REGISTER
-  ════════════════════════════════════════ -->
-  <section id="screen-register" class="screen auth-screen">
-    <div class="auth-hero">
-      <div class="auth-logo">Pozole <span>Don Chuy</span></div>
-      <div class="auth-tagline">🌮 Crea tu cuenta gratis</div>
-    </div>
-    <div class="auth-card">
-      <div class="auth-card-inner" id="register-form">
-        <h2 class="auth-title">Crear cuenta</h2>
-        <p class="auth-subtitle">Regístrate para hacer tus pedidos</p>
-
-        <div class="form-group">
-          <label class="form-label">Nombre completo</label>
-          <div class="input-wrap">
-            <i class="fa-solid fa-user input-icon"></i>
-            <input id="reg-name" class="form-input" type="text" placeholder="Tu nombre" autocomplete="name">
+          <div class="form-group">
+            <label class="form-label">Correo electrónico</label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-envelope input-icon"></i>
+              <input id="login-email" class="form-input" type="email" placeholder="tucorreo@ejemplo.com"
+                autocomplete="email">
+            </div>
+            <span class="form-error" id="login-email-err"></span>
           </div>
-          <span class="form-error" id="reg-name-err"></span>
-        </div>
 
-        <div class="form-group">
-          <label class="form-label">Teléfono</label>
-          <div class="input-wrap">
-            <i class="fa-solid fa-phone input-icon"></i>
-            <input id="reg-phone" class="form-input" type="tel" placeholder="55 1234 5678" autocomplete="tel">
-          </div>
-          <span class="form-error" id="reg-phone-err"></span>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Correo electrónico</label>
-          <div class="input-wrap">
-            <i class="fa-solid fa-envelope input-icon"></i>
-            <input id="reg-email" class="form-input" type="email" placeholder="tucorreo@ejemplo.com" autocomplete="email">
-          </div>
-          <span class="form-error" id="reg-email-err"></span>
-        </div>
-
-        <div class="form-row">
           <div class="form-group">
             <label class="form-label">Contraseña</label>
-            <input id="reg-pass" class="form-input" type="password" placeholder="Mínimo 6" autocomplete="new-password">
-            <span class="form-error" id="reg-pass-err"></span>
+            <div class="input-wrap">
+              <i class="fa-solid fa-lock input-icon"></i>
+              <input id="login-pass" class="form-input" type="password" placeholder="••••••••"
+                autocomplete="current-password">
+            </div>
+            <span class="form-error" id="login-pass-err"></span>
           </div>
-          <div class="form-group">
-            <label class="form-label">Confirmar</label>
-            <input id="reg-pass2" class="form-input" type="password" placeholder="Repetir" autocomplete="new-password">
-            <span class="form-error" id="reg-pass2-err"></span>
-          </div>
-        </div>
 
-        <button class="btn btn-primary" id="btn-register" style="margin-top:4px">
-          <i class="fa-solid fa-user-plus"></i> Crear cuenta
-        </button>
+          <button class="forgot-link" id="go-recover">¿Olvidaste tu contraseña?</button>
 
-        <div class="auth-link-row">
-          ¿Ya tienes cuenta? <button class="auth-link" id="go-login">Iniciar sesión</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ════════════════════════════════════════
-       SCREEN: RECOVER PASSWORD
-  ════════════════════════════════════════ -->
-  <section id="screen-recover" class="screen auth-screen">
-    <div class="auth-hero">
-      <div class="auth-logo">Pozole <span>Don Chuy</span></div>
-      <div class="auth-tagline">🔑 Recupera tu acceso</div>
-    </div>
-    <div class="auth-card">
-      <div class="auth-card-inner">
-        <h2 class="auth-title">¿Olvidaste tu contraseña?</h2>
-        <p class="auth-subtitle">Ingresa tu correo y te enviaremos un enlace de recuperación</p>
-
-        <div class="form-group">
-          <label class="form-label">Correo electrónico</label>
-          <div class="input-wrap">
-            <i class="fa-solid fa-envelope input-icon"></i>
-            <input id="recover-email" class="form-input" type="email" placeholder="tucorreo@ejemplo.com">
-          </div>
-          <span class="form-error" id="recover-email-err"></span>
-        </div>
-
-        <button class="btn btn-primary" id="btn-recover">
-          <i class="fa-solid fa-paper-plane"></i> Enviar enlace
-        </button>
-        <button class="btn btn-secondary" id="go-recover-back" style="margin-top:10px">
-          <i class="fa-solid fa-arrow-left"></i> Volver al login
-        </button>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ════════════════════════════════════════
-       SCREEN: CLIENT MENU
-  ════════════════════════════════════════ -->
-  <section id="screen-menu" class="screen">
-    <!-- Nav -->
-    <nav class="app-nav">
-      <div class="nav-title" style="font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--primary)">
-        🍲 Don Chuy
-      </div>
-      <button class="nav-action" id="btn-go-cart" title="Carrito">
-        <i class="fa-solid fa-cart-shopping"></i>
-        <span class="badge cart-badge" style="display:none">0</span>
-      </button>
-      <button class="nav-action" id="menu-logout" title="Cerrar sesión">
-        <i class="fa-solid fa-right-from-bracket"></i>
-      </button>
-    </nav>
-
-    <!-- Hero -->
-    <div class="menu-hero">
-      <div class="menu-hero-greeting" id="menu-user-name">¡Hola! 👋</div>
-      <div class="menu-hero-title">¿Qué se te antoja hoy?</div>
-      <div class="menu-hero-sub">Preparado al momento · Entrega a domicilio</div>
-    </div>
-
-    <!-- Category Tabs -->
-    <div class="category-tabs" id="category-tabs">
-      <button class="cat-tab active" data-cat="all">🍽️ Todo</button>
-      <button class="cat-tab" data-cat="pozole">🍲 Pozoles</button>
-      <button class="cat-tab" data-cat="extras">🫓 Extras</button>
-      <button class="cat-tab" data-cat="bebidas">🥤 Bebidas</button>
-    </div>
-
-    <!-- Products Grid -->
-    <div class="scroll-content">
-      <div class="products-grid" id="products-grid"></div>
-      <div style="height:20px"></div>
-    </div>
-  </section>
-
-
-  <!-- ════════════════════════════════════════
-       SCREEN: CART
-  ════════════════════════════════════════ -->
-  <section id="screen-cart" class="screen">
-    <nav class="app-nav">
-      <button class="nav-back" id="cart-back"><i class="fa-solid fa-arrow-left"></i></button>
-      <span class="nav-title">Mi Carrito 🛒</span>
-    </nav>
-
-    <!-- Empty state -->
-    <div id="cart-empty" class="cart-empty">
-      <div class="cart-empty-emoji">🛒</div>
-      <div class="cart-empty-text">Tu carrito está vacío</div>
-      <p style="font-size:.82rem;color:var(--text-muted)">Agrega algo del menú para comenzar</p>
-    </div>
-
-    <!-- Items list -->
-    <div id="cart-items-list" class="cart-items-list hidden scroll-content"></div>
-
-    <!-- Summary -->
-    <div id="cart-summary" class="cart-summary hidden">
-      <div class="cart-summary-row">
-        <span class="cart-summary-label">Subtotal</span>
-        <span class="cart-summary-value" id="cart-subtotal">$0</span>
-      </div>
-      <div class="cart-summary-row">
-        <span class="cart-summary-label">Envío</span>
-        <span class="cart-summary-value" style="color:var(--success-dark)">Gratis 🎉</span>
-      </div>
-      <hr class="cart-divider">
-      <div class="cart-summary-row">
-        <span class="cart-total-label">Total</span>
-        <span class="cart-total-value" id="cart-total">$0</span>
-      </div>
-      <button class="btn btn-primary" id="btn-confirm-order" style="margin-top:14px">
-        <i class="fa-solid fa-map-location-dot"></i> Confirmar pedido
-      </button>
-    </div>
-  </section>
-
-
-  <!-- ════════════════════════════════════════
-       SCREEN: DELIVERY (Address + Map)
-  ════════════════════════════════════════ -->
-  <section id="screen-delivery" class="screen">
-    <nav class="app-nav">
-      <button class="nav-back" id="delivery-back"><i class="fa-solid fa-arrow-left"></i></button>
-      <span class="nav-title">¿Dónde te lo llevamos?</span>
-    </nav>
-
-    <div class="scroll-content">
-      <!-- Map -->
-      <div class="delivery-section">
-        <div class="section-title"><i class="fa-solid fa-map-location-dot"></i> Marca tu ubicación</div>
-        <div id="delivery-map"></div>
-        <p class="map-hint"><i class="fa-solid fa-hand-pointer"></i> Arrastra el marcador hasta tu ubicación exacta</p>
-        <div class="coords-chip" id="coord-display">📍 Mueve el pin para actualizar coordenadas</div>
-      </div>
-
-      <!-- Address form -->
-      <div class="delivery-section" style="padding-top:0">
-        <div class="section-title"><i class="fa-solid fa-house"></i> Datos de entrega</div>
-
-        <div class="form-group">
-          <label class="form-label">Dirección completa *</label>
-          <div class="input-wrap">
-            <i class="fa-solid fa-location-dot input-icon"></i>
-            <input id="delivery-address" class="form-input" type="text" placeholder="Calle, número, colonia">
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Referencias adicionales</label>
-          <div class="input-wrap">
-            <i class="fa-solid fa-circle-info input-icon"></i>
-            <input id="delivery-ref" class="form-input" type="text" placeholder="Entre calles, color de casa...">
-          </div>
-        </div>
-
-        <button class="btn btn-gold" id="btn-place-order" style="margin-top:4px">
-          <i class="fa-solid fa-paper-plane"></i> Enviar pedido
-        </button>
-        <div style="height:24px"></div>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ════════════════════════════════════════
-       SCREEN: ORDER TRACKING
-  ════════════════════════════════════════ -->
-  <section id="screen-tracking" class="screen">
-    <nav class="app-nav">
-      <button class="nav-back" id="tracking-back"><i class="fa-solid fa-arrow-left"></i></button>
-      <span class="nav-title">Seguimiento</span>
-      <button class="nav-action" id="tracking-logout" title="Cerrar sesión">
-        <i class="fa-solid fa-right-from-bracket"></i>
-      </button>
-    </nav>
-
-    <!-- Header -->
-    <div class="tracking-header">
-      <div class="tracking-order-num" id="tracking-order-num">Pedido #---</div>
-      <div class="tracking-title">¡Pedido en camino! 🛵</div>
-      <div class="tracking-eta" id="tracking-eta">Tiempo estimado: 30–45 min</div>
-    </div>
-
-    <div class="scroll-content">
-      <!-- Status Stepper -->
-      <div class="tracking-stepper" id="tracking-stepper"></div>
-
-      <!-- Order Summary Card -->
-      <div class="tracking-card">
-        <div class="tracking-card-title">Resumen del pedido</div>
-        <div id="tracking-items"></div>
-        <div class="tracking-total-row">
-          <span>Total</span>
-          <span id="tracking-total">$0</span>
-        </div>
-      </div>
-
-      <div class="tracking-card" style="margin-top:12px">
-        <div class="tracking-card-title">Dirección de entrega</div>
-        <div class="tracking-address-text" id="tracking-address"></div>
-      </div>
-
-      <div style="padding:16px">
-        <button class="btn btn-secondary" id="btn-new-order" onclick="Router.navigate('menu')">
-          <i class="fa-solid fa-plus"></i> Hacer otro pedido
-        </button>
-      </div>
-      <div style="height:20px"></div>
-    </div>
-  </section>
-
-
-  <!-- ════════════════════════════════════════
-       SCREEN: ADMIN PANEL
-  ════════════════════════════════════════ -->
-  <section id="screen-admin" class="screen">
-    <!-- Admin Nav -->
-    <nav class="admin-nav">
-      <div class="admin-nav-logo">🍲 Admin — Don Chuy</div>
-      <button class="admin-nav-btn" id="admin-logout">
-        <i class="fa-solid fa-right-from-bracket"></i> Salir
-      </button>
-    </nav>
-
-    <!-- Tabs -->
-    <div class="admin-tabs">
-      <button class="admin-tab active" data-tab="orders">
-        <i class="fa-solid fa-list-check"></i> Pedidos
-      </button>
-      <button class="admin-tab" data-tab="products">
-        <i class="fa-solid fa-bowl-food"></i> Productos
-      </button>
-      <button class="admin-tab" data-tab="summary">
-        <i class="fa-solid fa-chart-bar"></i> Resumen
-      </button>
-    </div>
-
-    <!-- Panels -->
-    <div class="admin-content scroll-content">
-
-      <!-- ORDERS panel -->
-      <div id="admin-panel-orders" class="admin-panel-screen active-sub">
-        <div class="section-header" style="padding:14px 14px 6px;display:flex;justify-content:space-between;align-items:center">
-          <span style="font-weight:700;font-size:.95rem">Pedidos del día</span>
-          <button class="btn btn-ghost btn-sm" onclick="UI.renderAdminOrders()" style="color:var(--primary)">
-            <i class="fa-solid fa-rotate-right"></i> Actualizar
+          <button class="btn btn-primary" id="btn-login">
+            <i class="fa-solid fa-right-to-bracket"></i> Entrar
           </button>
-        </div>
-        <div class="orders-list" id="admin-orders-list">
-          <div class="empty-state">
-            <div style="font-size:3rem;opacity:.25;padding:20px 0">📋</div>
-            <p>No hay pedidos aún</p>
+
+          <div class="auth-link-row">
+            ¿No tienes cuenta? <button class="auth-link" id="go-register">Crear cuenta</button>
+          </div>
+
+          <div class="auth-link-row" style="margin-top:12px;font-size:.78rem;color:var(--text-muted)">
+            Admin demo: admin@pozole.mx / admin123
           </div>
         </div>
       </div>
+    </section>
 
-      <!-- PRODUCTS panel -->
-      <div id="admin-panel-products" class="admin-panel-screen">
-        <div class="section-header" style="padding:14px 14px 6px;display:flex;justify-content:space-between;align-items:center">
-          <span style="font-weight:700;font-size:.95rem">Gestión de Productos</span>
-        </div>
-        <div class="prod-manage-list" id="admin-products-list"></div>
-        <div style="height:80px"></div>
-        <!-- FAB -->
-        <button class="fab" id="fab-add-product" title="Agregar producto">
-          <i class="fa-solid fa-plus"></i>
-        </button>
+
+    <!-- ════════════════════════════════════════
+       SCREEN: REGISTER
+  ════════════════════════════════════════ -->
+    <section id="screen-register" class="screen auth-screen">
+      <div class="auth-hero">
+        <div class="auth-logo">Pozole <span>Don Chuy</span></div>
+        <div class="auth-tagline">🌮 Crea tu cuenta gratis</div>
       </div>
+      <div class="auth-card">
+        <div class="auth-card-inner" id="register-form">
+          <h2 class="auth-title">Crear cuenta</h2>
+          <p class="auth-subtitle">Regístrate para hacer tus pedidos</p>
 
-      <!-- SUMMARY panel -->
-      <div id="admin-panel-summary" class="admin-panel-screen">
-        <div class="summary-grid">
-          <div class="summary-card">
-            <div class="summary-icon">💰</div>
-            <div class="summary-value" id="summary-total">$0</div>
-            <div class="summary-label">Ventas del día</div>
+          <div class="form-group">
+            <label class="form-label">Nombre completo</label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-user input-icon"></i>
+              <input id="reg-name" class="form-input" type="text" placeholder="Tu nombre" autocomplete="name">
+            </div>
+            <span class="form-error" id="reg-name-err"></span>
           </div>
-          <div class="summary-card">
-            <div class="summary-icon">📋</div>
-            <div class="summary-value" id="summary-orders">0</div>
-            <div class="summary-label">Pedidos totales</div>
+
+          <div class="form-group">
+            <label class="form-label">Teléfono</label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-phone input-icon"></i>
+              <input id="reg-phone" class="form-input" type="tel" placeholder="55 1234 5678" autocomplete="tel">
+            </div>
+            <span class="form-error" id="reg-phone-err"></span>
           </div>
-          <div class="summary-card">
-            <div class="summary-icon">✅</div>
-            <div class="summary-value" id="summary-delivered">0</div>
-            <div class="summary-label">Entregados</div>
+
+          <div class="form-group">
+            <label class="form-label">Correo electrónico</label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-envelope input-icon"></i>
+              <input id="reg-email" class="form-input" type="email" placeholder="tucorreo@ejemplo.com"
+                autocomplete="email">
+            </div>
+            <span class="form-error" id="reg-email-err"></span>
           </div>
-          <div class="summary-card">
-            <div class="summary-icon">⏳</div>
-            <div class="summary-value" id="summary-pending">0</div>
-            <div class="summary-label">Pendientes</div>
-          </div>
-          <div class="summary-card full">
-            <div class="summary-section-title">🏆 Productos más vendidos hoy</div>
-            <div id="summary-top-products">
-              <p style="color:var(--text-muted);font-size:.85rem;text-align:center;padding:12px 0">Sin ventas hoy todavía</p>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Contraseña</label>
+              <input id="reg-pass" class="form-input" type="password" placeholder="Mínimo 6"
+                autocomplete="new-password">
+              <span class="form-error" id="reg-pass-err"></span>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Confirmar</label>
+              <input id="reg-pass2" class="form-input" type="password" placeholder="Repetir"
+                autocomplete="new-password">
+              <span class="form-error" id="reg-pass2-err"></span>
             </div>
           </div>
+
+          <button class="btn btn-primary" id="btn-register" style="margin-top:4px">
+            <i class="fa-solid fa-user-plus"></i> Crear cuenta
+          </button>
+
+          <div class="auth-link-row">
+            ¿Ya tienes cuenta? <button class="auth-link" id="go-login">Iniciar sesión</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ════════════════════════════════════════
+       SCREEN: RECOVER PASSWORD
+  ════════════════════════════════════════ -->
+    <section id="screen-recover" class="screen auth-screen">
+      <div class="auth-hero">
+        <div class="auth-logo">Pozole <span>Don Chuy</span></div>
+        <div class="auth-tagline">🔑 Recupera tu acceso</div>
+      </div>
+      <div class="auth-card">
+        <div class="auth-card-inner">
+          <h2 class="auth-title">¿Olvidaste tu contraseña?</h2>
+          <p class="auth-subtitle">Ingresa tu correo y te enviaremos un enlace de recuperación</p>
+
+          <div class="form-group">
+            <label class="form-label">Correo electrónico</label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-envelope input-icon"></i>
+              <input id="recover-email" class="form-input" type="email" placeholder="tucorreo@ejemplo.com">
+            </div>
+            <span class="form-error" id="recover-email-err"></span>
+          </div>
+
+          <button class="btn btn-primary" id="btn-recover">
+            <i class="fa-solid fa-paper-plane"></i> Enviar enlace
+          </button>
+          <button class="btn btn-secondary" id="go-recover-back" style="margin-top:10px">
+            <i class="fa-solid fa-arrow-left"></i> Volver al login
+          </button>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ════════════════════════════════════════
+       SCREEN: CLIENT MENU
+  ════════════════════════════════════════ -->
+    <section id="screen-menu" class="screen">
+      <!-- Nav -->
+      <nav class="app-nav">
+        <div class="nav-title" style="font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--primary)">
+          🍲 Don Chuy
+        </div>
+        <button class="nav-action" id="btn-go-profile" title="Mi Perfil">
+          <i class="fa-solid fa-user"></i>
+        </button>
+        <button class="nav-action" id="btn-go-cart" title="Carrito">
+          <i class="fa-solid fa-cart-shopping"></i>
+          <span class="badge cart-badge" style="display:none">0</span>
+        </button>
+        <button class="nav-action" id="menu-logout" title="Cerrar sesión">
+          <i class="fa-solid fa-right-from-bracket"></i>
+        </button>
+      </nav>
+
+      <!-- Hero -->
+      <div class="menu-hero">
+        <div class="menu-hero-greeting" id="menu-user-name">¡Hola! 👋</div>
+        <div class="menu-hero-title">¿Qué se te antoja hoy?</div>
+        <div class="menu-hero-sub">Preparado al momento · Entrega a domicilio</div>
+      </div>
+
+      <!-- Category Tabs -->
+      <div class="category-tabs" id="category-tabs">
+        <button class="cat-tab active" data-cat="all">🍽️ Todo</button>
+        <button class="cat-tab" data-cat="pozole">🍲 Pozoles</button>
+        <button class="cat-tab" data-cat="extras">🫓 Extras</button>
+        <button class="cat-tab" data-cat="bebidas">🥤 Bebidas</button>
+      </div>
+
+      <!-- Products Grid -->
+      <div class="scroll-content">
+        <div class="products-grid" id="products-grid"></div>
+        <div style="height:20px"></div>
+      </div>
+    </section>
+
+
+    <!-- ════════════════════════════════════════
+       SCREEN: CART
+  ════════════════════════════════════════ -->
+    <section id="screen-cart" class="screen">
+      <nav class="app-nav">
+        <button class="nav-back" id="cart-back"><i class="fa-solid fa-arrow-left"></i></button>
+        <span class="nav-title">Mi Carrito 🛒</span>
+      </nav>
+
+      <!-- Empty state -->
+      <div id="cart-empty" class="cart-empty">
+        <div class="cart-empty-emoji">🛒</div>
+        <div class="cart-empty-text">Tu carrito está vacío</div>
+        <p style="font-size:.82rem;color:var(--text-muted)">Agrega algo del menú para comenzar</p>
+      </div>
+
+      <!-- Items list -->
+      <div id="cart-items-list" class="cart-items-list hidden scroll-content"></div>
+
+      <!-- Summary -->
+      <div id="cart-summary" class="cart-summary hidden">
+        <div class="cart-summary-row">
+          <span class="cart-summary-label">Subtotal</span>
+          <span class="cart-summary-value" id="cart-subtotal">$0</span>
+        </div>
+        <div class="cart-summary-row">
+          <span class="cart-summary-label">Envío</span>
+          <span class="cart-summary-value" style="color:var(--success-dark)">Gratis 🎉</span>
+        </div>
+        <hr class="cart-divider">
+        <div class="cart-summary-row">
+          <span class="cart-total-label">Total</span>
+          <span class="cart-total-value" id="cart-total">$0</span>
+        </div>
+        <button class="btn btn-primary" id="btn-confirm-order" style="margin-top:14px">
+          <i class="fa-solid fa-map-location-dot"></i> Confirmar pedido
+        </button>
+      </div>
+    </section>
+
+
+    <!-- ════════════════════════════════════════
+       SCREEN: DELIVERY (Address + Map)
+  ════════════════════════════════════════ -->
+    <section id="screen-delivery" class="screen">
+      <nav class="app-nav">
+        <button class="nav-back" id="delivery-back"><i class="fa-solid fa-arrow-left"></i></button>
+        <span class="nav-title">¿Dónde te lo llevamos?</span>
+      </nav>
+
+      <div class="scroll-content">
+        <!-- Map -->
+        <div class="delivery-section">
+          <div class="section-title"><i class="fa-solid fa-map-location-dot"></i> Marca tu ubicación</div>
+          <div id="delivery-map"></div>
+          <p class="map-hint"><i class="fa-solid fa-hand-pointer"></i> Arrastra el marcador hasta tu ubicación exacta
+          </p>
+          <div class="coords-chip" id="coord-display">📍 Mueve el pin para actualizar coordenadas</div>
+        </div>
+
+        <!-- Address form -->
+        <div class="delivery-section" style="padding-top:0">
+          <div class="section-title"><i class="fa-solid fa-house"></i> Datos de entrega</div>
+
+          <div class="form-group">
+            <label class="form-label">Dirección completa *</label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-location-dot input-icon"></i>
+              <input id="delivery-address" class="form-input" type="text" placeholder="Calle, número, colonia">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Referencias adicionales</label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-circle-info input-icon"></i>
+              <input id="delivery-ref" class="form-input" type="text" placeholder="Entre calles, color de casa...">
+            </div>
+          </div>
+
+          <button class="btn btn-gold" id="btn-place-order" style="margin-top:4px">
+            <i class="fa-solid fa-paper-plane"></i> Enviar pedido
+          </button>
+          <div style="height:24px"></div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ════════════════════════════════════════
+       SCREEN: ORDER TRACKING
+  ════════════════════════════════════════ -->
+    <section id="screen-tracking" class="screen">
+      <nav class="app-nav">
+        <button class="nav-back" id="tracking-back"><i class="fa-solid fa-arrow-left"></i></button>
+        <span class="nav-title">Seguimiento</span>
+        <button class="nav-action" id="tracking-logout" title="Cerrar sesión">
+          <i class="fa-solid fa-right-from-bracket"></i>
+        </button>
+      </nav>
+
+      <!-- Header -->
+      <div class="tracking-header">
+        <div class="tracking-order-num" id="tracking-order-num">Pedido #---</div>
+        <div class="tracking-title">¡Pedido en camino! 🛵</div>
+        <div class="tracking-eta" id="tracking-eta">Tiempo estimado: 30–45 min</div>
+      </div>
+
+      <div class="scroll-content">
+        <!-- Status Stepper -->
+        <div class="tracking-stepper" id="tracking-stepper"></div>
+
+        <!-- Order Summary Card -->
+        <div class="tracking-card">
+          <div class="tracking-card-title">Resumen del pedido</div>
+          <div id="tracking-items"></div>
+          <div class="tracking-total-row">
+            <span>Total</span>
+            <span id="tracking-total">$0</span>
+          </div>
+        </div>
+
+        <div class="tracking-card" style="margin-top:12px">
+          <div class="tracking-card-title">Dirección de entrega</div>
+          <div class="tracking-address-text" id="tracking-address"></div>
+        </div>
+
+        <div style="padding:16px">
+          <button class="btn btn-secondary" id="btn-new-order" onclick="Router.navigate('menu')">
+            <i class="fa-solid fa-plus"></i> Hacer otro pedido
+          </button>
         </div>
         <div style="height:20px"></div>
       </div>
+    </section>
 
-    </div><!-- /admin-content -->
-  </section>
+    <!-- ════════════════════════════════════════
+       SCREEN: CLIENT PROFILE
+  ════════════════════════════════════════ -->
+    <section id="screen-profile" class="screen">
+      <nav class="app-nav">
+        <button class="nav-back" id="profile-back"><i class="fa-solid fa-arrow-left"></i></button>
+        <span class="nav-title">Mi Perfil</span>
+      </nav>
+
+      <div class="scroll-content" style="padding:16px">
+        <div style="text-align:center;margin-top:16px;margin-bottom:24px">
+          <div
+            style="width:80px;height:80px;border-radius:50%;background:var(--border);margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;color:var(--text-light)">
+            <i class="fa-solid fa-user"></i>
+          </div>
+          <h2 style="font-size:1.4rem" id="profile-greeting">Hola, Cliente</h2>
+          <p style="color:var(--text-light);font-size:0.9rem">Aquí puedes actualizar tus datos</p>
+        </div>
+
+        <div class="delivery-section" style="padding-top:0">
+          <div class="form-group">
+            <label class="form-label">Nombre completo</label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-user input-icon"></i>
+              <input id="profile-name" class="form-input" type="text" placeholder="Tu nombre">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Teléfono</label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-phone input-icon"></i>
+              <input id="profile-phone" class="form-input" type="tel" placeholder="55 1234 5678">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Correo electrónico</label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-envelope input-icon"></i>
+              <input id="profile-email" class="form-input" type="email" disabled
+                style="background:var(--bg);color:var(--text-muted)">
+            </div>
+            <p style="font-size:0.75rem;color:var(--text-muted);margin-top:4px">El correo no se puede cambiar.</p>
+          </div>
+
+          <button class="btn btn-primary" id="btn-save-profile" style="margin-top:16px">
+            <i class="fa-solid fa-floppy-disk"></i> Guardar cambios
+          </button>
+        </div>
+      </div>
+    </section>
 
 
-  <!-- ════════════════════════════════════════
+    <!-- ════════════════════════════════════════
+       SCREEN: ADMIN PANEL
+  ════════════════════════════════════════ -->
+    <section id="screen-admin" class="screen">
+      <!-- Admin Nav -->
+      <nav class="admin-nav">
+        <div class="admin-nav-logo">🍲 Admin — Don Chuy</div>
+        <button class="admin-nav-btn" id="admin-logout">
+          <i class="fa-solid fa-right-from-bracket"></i> Salir
+        </button>
+      </nav>
+
+      <!-- Tabs -->
+      <div class="admin-tabs">
+        <button class="admin-tab active" data-tab="orders">
+          <i class="fa-solid fa-list-check"></i> Pedidos
+        </button>
+        <button class="admin-tab" data-tab="products">
+          <i class="fa-solid fa-bowl-food"></i> Productos
+        </button>
+        <button class="admin-tab" data-tab="summary">
+          <i class="fa-solid fa-chart-bar"></i> Resumen
+        </button>
+      </div>
+
+      <!-- Panels -->
+      <div class="admin-content scroll-content">
+
+        <!-- ORDERS panel -->
+        <div id="admin-panel-orders" class="admin-panel-screen active-sub">
+          <div class="section-header"
+            style="padding:14px 14px 6px;display:flex;justify-content:space-between;align-items:center">
+            <span style="font-weight:700;font-size:.95rem">Pedidos del día</span>
+            <button class="btn btn-ghost btn-sm" onclick="UI.renderAdminOrders()" style="color:var(--primary)">
+              <i class="fa-solid fa-rotate-right"></i> Actualizar
+            </button>
+          </div>
+          <div class="orders-list" id="admin-orders-list">
+            <div class="empty-state">
+              <div style="font-size:3rem;opacity:.25;padding:20px 0">📋</div>
+              <p>No hay pedidos aún</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- PRODUCTS panel -->
+        <div id="admin-panel-products" class="admin-panel-screen">
+          <div class="section-header"
+            style="padding:14px 14px 6px;display:flex;justify-content:space-between;align-items:center">
+            <span style="font-weight:700;font-size:.95rem">Gestión de Productos</span>
+          </div>
+          <div class="prod-manage-list" id="admin-products-list"></div>
+          <div style="height:80px"></div>
+          <!-- FAB -->
+          <button class="fab" id="fab-add-product" title="Agregar producto">
+            <i class="fa-solid fa-plus"></i>
+          </button>
+        </div>
+
+        <!-- SUMMARY panel -->
+        <div id="admin-panel-summary" class="admin-panel-screen">
+          <div class="summary-grid">
+            <div class="summary-card">
+              <div class="summary-icon">💰</div>
+              <div class="summary-value" id="summary-total">$0</div>
+              <div class="summary-label">Ventas del día</div>
+            </div>
+            <div class="summary-card">
+              <div class="summary-icon">📋</div>
+              <div class="summary-value" id="summary-orders">0</div>
+              <div class="summary-label">Pedidos totales</div>
+            </div>
+            <div class="summary-card">
+              <div class="summary-icon">✅</div>
+              <div class="summary-value" id="summary-delivered">0</div>
+              <div class="summary-label">Entregados</div>
+            </div>
+            <div class="summary-card">
+              <div class="summary-icon">⏳</div>
+              <div class="summary-value" id="summary-pending">0</div>
+              <div class="summary-label">Pendientes</div>
+            </div>
+            <div class="summary-card full">
+              <div class="summary-section-title">🏆 Productos más vendidos hoy</div>
+              <div id="summary-top-products">
+                <p style="color:var(--text-muted);font-size:.85rem;text-align:center;padding:12px 0">Sin ventas hoy
+                  todavía</p>
+              </div>
+            </div>
+          </div>
+          <div style="height:20px"></div>
+        </div>
+
+      </div><!-- /admin-content -->
+    </section>
+
+
+    <!-- ════════════════════════════════════════
        MODAL (Sheet)
   ════════════════════════════════════════ -->
-  <div id="modal-overlay" class="modal-overlay">
-    <div class="modal-sheet">
-      <div class="modal-handle"></div>
-      <div class="modal-header">
-        <span class="modal-title" id="modal-title">Detalle</span>
-        <button class="modal-close" id="modal-close"><i class="fa-solid fa-xmark"></i></button>
+    <div id="modal-overlay" class="modal-overlay">
+      <div class="modal-sheet">
+        <div class="modal-handle"></div>
+        <div class="modal-header">
+          <span class="modal-title" id="modal-title">Detalle</span>
+          <button class="modal-close" id="modal-close"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="modal-body" id="modal-body"></div>
       </div>
-      <div class="modal-body" id="modal-body"></div>
     </div>
-  </div>
 
-  <!-- Toast Container -->
-  <div id="toast-container" class="toast-container"></div>
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
 
-</div><!-- /#app -->
+  </div><!-- /#app -->
 
-<!-- External Libraries -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- External Libraries -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<!-- App Modules (order matters) -->
-<script src="js/db.js"></script>
-<script src="js/auth.js"></script>
-<script src="js/cart.js"></script>
-<script src="js/orders.js"></script>
-<script src="js/products.js"></script>
-<script src="js/map.js"></script>
-<script src="js/ui.js"></script>
-<script src="js/router.js"></script>
-<script src="js/app.js"></script>
+  <!-- App Modules (order matters) -->
+  <script src="js/db.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/orders.js"></script>
+  <script src="js/products.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/router.js"></script>
+  <script src="js/app.js"></script>
 
 </body>
+
 </html>

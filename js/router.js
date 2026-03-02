@@ -7,7 +7,7 @@ const Router = {
     _current: null,
 
     _publicScreens: ['login', 'register', 'recover'],
-    _clientScreens: ['menu', 'cart', 'delivery', 'tracking'],
+    _clientScreens: ['menu', 'cart', 'delivery', 'tracking', 'profile'],
     _adminScreens: ['admin'],
 
     navigate(screenId, force = false) {
@@ -38,6 +38,7 @@ const Router = {
         if (screenId === 'cart') UI.renderCart();
         if (screenId === 'delivery') { setTimeout(() => MapManager.initDeliveryMap(), 200); }
         if (screenId === 'tracking') UI.renderTracking();
+        if (screenId === 'profile') UI.renderProfile();
         if (screenId === 'admin') UI.renderAdminOrders();
 
         window.location.hash = screenId;

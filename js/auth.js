@@ -43,6 +43,17 @@ const Auth = {
         return DB.getSession();
     },
 
+    updateProfile(name, phone) {
+        let user = this.getCurrentUser();
+        if (!user) return { ok: false };
+        const updated = DB.updateUser(user.id, { name, phone });
+        if (updated) {
+            DB.setSession(updated);
+            return { ok: true, user: updated };
+        }
+        return { ok: false };
+    },
+
     isAdmin() {
         const u = DB.getSession();
         return u && u.role === 'admin';

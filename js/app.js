@@ -103,8 +103,28 @@ document.addEventListener('DOMContentLoaded', () => {
         UI.renderMenu(_currentCategory);
     });
 
+    on('btn-go-profile', 'click', () => Router.navigate('profile'));
     on('btn-go-cart', 'click', () => Router.navigate('cart'));
     on('menu-logout', 'click', handleLogout);
+
+    /* ─────────────────────────────────────
+       PROFILE EVENTS
+    ───────────────────────────────────── */
+    on('profile-back', 'click', () => Router.navigate('menu'));
+
+    on('btn-save-profile', 'click', () => {
+        const name = document.getElementById('profile-name').value.trim();
+        const phone = document.getElementById('profile-phone').value.trim();
+        if (!name || !phone) { UI.toast('Por favor completa todos los campos', 'warning'); return; }
+
+        const res = Auth.updateProfile(name, phone);
+        if (res.ok) {
+            UI.toast('Perfil actualizado correctamente ✅', 'success');
+            Router.navigate('menu');
+        } else {
+            UI.toast('Error al actualizar', 'error');
+        }
+    });
 
     /* ─────────────────────────────────────
        CART EVENTS
