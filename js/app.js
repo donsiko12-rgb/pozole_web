@@ -141,11 +141,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     ───────────────────────────────────── */
     let _currentCategory = 'all';
 
-    document.getElementById('products-grid').addEventListener('click', e => {
+    document.getElementById('products-grid').addEventListener('click', async e => {
         const btn = e.target.closest('[data-action]');
         if (!btn) return;
         const { action, id } = btn.dataset;
-        if (action === 'add') { Cart.add(id); UI.toast('Agregado al carrito 🛒'); }
+        if (action === 'add') {
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            btn.disabled = true;
+            const ok = await Cart.add(id);
+            btn.innerHTML = originalHtml;
+            btn.disabled = false;
+            if (ok) UI.toast('Agregado al carrito 🛒');
+        }
         if (action === 'increase') { const item = Cart.getItems().find(i => i.productId === id); Cart.update(id, (item?.qty || 0) + 1); }
         if (action === 'decrease') { const item = Cart.getItems().find(i => i.productId === id); Cart.update(id, (item?.qty || 1) - 1); }
     });

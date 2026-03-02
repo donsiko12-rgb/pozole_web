@@ -6,9 +6,9 @@
 const Cart = {
     _items: [], // [{ productId, name, price, emoji, qty }]
 
-    add(productId) {
-        const product = DB.getProductById(productId);
-        if (!product || !product.active) return;
+    async add(productId) {
+        const product = await DB.getProductById(productId);
+        if (!product || !product.active) return false;
         const existing = this._items.find(i => i.productId === productId);
         if (existing) {
             existing.qty++;
@@ -16,6 +16,7 @@ const Cart = {
             this._items.push({ productId, name: product.name, price: product.price, emoji: product.emoji, qty: 1 });
         }
         this._notify();
+        return true;
     },
 
     remove(productId) {
