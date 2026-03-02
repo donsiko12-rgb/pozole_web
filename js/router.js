@@ -36,7 +36,10 @@ const Router = {
         // Lifecycle hooks
         if (screenId === 'menu') await UI.renderMenu();
         if (screenId === 'cart') UI.renderCart();
-        if (screenId === 'delivery') { setTimeout(() => MapManager.initDeliveryMap(), 200); }
+        if (screenId === 'delivery') {
+            UI.renderDelivery();
+            setTimeout(() => MapManager.initDeliveryMap(), 400);
+        }
         if (screenId === 'tracking') await UI.renderTracking();
         if (screenId === 'profile') UI.renderProfile();
         if (screenId === 'client-orders') await UI.renderClientOrders();

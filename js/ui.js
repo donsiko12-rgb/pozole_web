@@ -131,6 +131,19 @@ const UI = {
     this.updateCartBadge();
   },
 
+  /* ── DELIVERY (PRE-FILL ADDRESS) ── */
+  renderDelivery() {
+    const user = Auth.getCurrentUser();
+    if (!user) return;
+
+    const addrInput = document.getElementById('delivery-address');
+    const refInput = document.getElementById('delivery-ref');
+
+    // Only pre-fill if they are empty
+    if (addrInput && !addrInput.value) addrInput.value = user.address || '';
+    if (refInput && !refInput.value) refInput.value = user.colonia || '';
+  },
+
   /* ── TRACKING ── */
   async renderTracking() {
     const order = window._currentUserOrder;
